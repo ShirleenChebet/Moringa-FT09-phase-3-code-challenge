@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from models.magazine import Magazine
 
 class Article:
-    def __init__(self, id: int, title: str, content: str, author_id: int, magazine_id: int):
+    def __init__(self, id, title, content, author_id, magazine_id):
         if not isinstance(id, int):
             raise ValueError("ID must be an integer.")
         if not isinstance(title, str) or not (5 <= len(title) <= 50):
@@ -63,3 +63,9 @@ class Article:
             from models.magazine import Magazine  # Local import to avoid circular dependency
             return Magazine(**dict(result))
         return None
+    
+    @classmethod
+    def get_all(cls):
+        query = "SELECT * FROM magazines;"
+        return Connection.get_db_connection().execute(query).fetchall()
+

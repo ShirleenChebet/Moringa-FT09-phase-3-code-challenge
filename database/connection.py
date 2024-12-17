@@ -1,20 +1,15 @@
 import sqlite3
-from typing import Any
+
+# Specify the database file location
+DATABASE_NAME = './database/magazine.db'
 
 class Connection:
-    _db_connection = None
-
-    @classmethod
-    def get_db_connection(cls) -> sqlite3.Connection:
-        """Return a database connection. Create one if it doesn't exist."""
-        if cls._db_connection is None:
-            cls._db_connection = sqlite3.connect("your_database_name.db")  # Replace with your DB name
-            cls._db_connection.row_factory = sqlite3.Row  # Enable dictionary-like access to rows
-        return cls._db_connection
-
-    @classmethod
-    def close_connection(cls):
-        """Close the database connection."""
-        if cls._db_connection:
-            cls._db_connection.close()
-            cls._db_connection = None
+    @staticmethod
+    def get_db_connection():
+        """
+        Establishes a connection to the SQLite database.
+        Configures the connection to return rows as dictionaries.
+        """
+        conn = sqlite3.connect(DATABASE_NAME)
+        conn.row_factory = sqlite3.Row  # Allows accessing columns by name
+        return conn

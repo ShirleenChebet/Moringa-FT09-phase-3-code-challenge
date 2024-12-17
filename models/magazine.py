@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from models.author import Author
 
 class Magazine:
-    def __init__(self, id: int, name: str):
+    def __init__(self, id: int = None, name: str = "", category:str = ""):
         if not isinstance(id, int):
             raise ValueError("ID must be an integer.")
         if not isinstance(name, str) or not (2 <= len(name) <= 16):
@@ -14,6 +14,7 @@ class Magazine:
         
         self._id = id
         self._name = name
+        self._category = category
 
     @property
     def id(self) -> int:
@@ -22,6 +23,23 @@ class Magazine:
     @property
     def name(self) -> str:
         return self._name
+    
+    @property
+    def category(self):
+        return self._category
+    
+    @id.setter
+    def id(self, value):
+     if value is not None and not isinstance(value, int):
+        raise ValueError("ID must be an integer or None.")
+     self._id = value
+
+    
+    @category.setter
+    def category(self, value) :
+        if not isinstance(value, str) or not (2 <= len(value) <= 16):
+            raise ValueError("Name must be a string between 2 and 16 characters.")
+        self._category = value
 
     @name.setter
     def name(self, value: str):
@@ -67,3 +85,12 @@ class Magazine:
         rows = connection.get_db_connection().execute(query, (self.id,)).fetchall()
         from models.author import Author  # Local import to avoid circular dependency
         return [Author(**dict(row)) for row in rows]
+    
+    
+    
+
+    @classmethod
+    def get_all(cls):
+        query = "SELECT * FROM magazines;"
+        return Connection.get_db_connection().execute(query).fetchall()
+
